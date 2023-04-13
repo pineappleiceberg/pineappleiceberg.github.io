@@ -18,8 +18,4 @@ titles:
 key: page-about
 ---
 
-Just say something about yourself. :+1:
-
-{% highlight javascript %}
-(() => console.log('hello, world!'))();
-{% endhighlight %}
+Maryville saint, majoring in mathematics, computer science, and chemistry. Primarily interested in R&D. Embedded systems, high performance computing, cyber warfare, computational mathematics, and cryptography compose my interests in computer science. 

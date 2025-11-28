@@ -3,13 +3,15 @@ layout: post
 title: "Private Set Intersection demo (C/WASM + garbled circuits)"
 date: 2025-11-28
 tags: [cryptography, psi, wasm, garbled-circuits, blake3]
+mathjax: true
+mathjax_autoNumber: false
 ---
 
 **Live demo (interactive, in-browser):**  
-<https://pineappleiceberg.github.io/psiweb/>
+<https://pineappleiceberg.github.io/webpsi/>
 
 **Source code (C core + WebAssembly glue):**  
-<https://github.com/pineappleiceberg/psiweb>
+<https://github.com/pineappleiceberg/webpsi>
 
 This project is a small, self-contained *private set intersection* (PSI) core
 written in C and compiled to WebAssembly, with a browser UI on top. The page
@@ -67,7 +69,9 @@ using a naive nested loop and a byte-wise `memcmp` over the flat digest arrays.
 > **Note.** In this *demo*, the BLAKE3 key is a fixed constant compiled into
 > the module for reproducibility. In a real deployment it would be a shared,
 > secret key (and preferably per-session), so that an attacker who can read the
-> code cannot mount trivial offline dictionary attacks. Because of this, if you use the code at the root of this project, please note you need an OT protcol and (likely) networking of some kind. 
+> code cannot mount trivial offline dictionary attacks. Because of this, if you
+> use the code at the root of this project, please note you need an OT protocol
+> and (likely) networking of some kind.
 
 ---
 
@@ -197,16 +201,16 @@ The WebAssembly module exports two main PSI entry points:
 
 The browser UI:
 
-1. Read two newline-separated lists of strings from the textareas
+1. Reads two newline-separated lists of strings from the textareas
    (“Alice’s set” and “Bob’s set”).  
-2. Marshal them into contiguous buffers and hand them to the WASM module.  
-3. Let the C core hash all strings with keyed BLAKE3 into fixed-size digests.  
-4. Run **both** PSI variants on those digests:
-   - record the time and intersection size for the hash-only variant,  
-   - record the time and intersection size for the GC-backed variant.  
-5. Cross-check that both variants return the same mask, and show any mismatch
+2. Marshals them into contiguous buffers and hands them to the WASM module.  
+3. Lets the C core hash all strings with keyed BLAKE3 into fixed-size digests.  
+4. Runs **both** PSI variants on those digests:
+   - records the time and intersection size for the hash-only variant,  
+   - records the time and intersection size for the GC-backed variant.  
+5. Cross-checks that both variants return the same mask, and shows any mismatch
    as an error.  
-6. Present the timings and intersection size in the UI.
+6. Presents the timings and intersection size in the UI.
 
 This setup keeps all interesting work inside a small, testable C library, while
 the JavaScript layer is only responsible for IO, display, and light
@@ -246,12 +250,12 @@ a PSI.
 ## How to use the demo
 
 1. Open the live demo in a modern browser:  
-   <https://pineappleiceberg.github.io/psiweb/>
+   <https://pineappleiceberg.github.io/webpsi/>
 2. Enter or generate newline-separated strings into the Alice and Bob text areas.  
 3. Click **“Run PSI (hash-only & GC)”**.  
 4. Inspect the reported runtimes and intersection size for both variants.  
 5. Optionally, open the browser devtools console to see any internal checks or
    messages if you deliberately inject mismatched data or exotic inputs.
 
-The code is deliberately small and direct, so it can be read end-to-end as an example of PSI, garbled circuits, and WebAssembly integration.
-
+The code is deliberately small and direct, so it can be read end-to-end as an
+example of PSI, garbled circuits, and WebAssembly integration.

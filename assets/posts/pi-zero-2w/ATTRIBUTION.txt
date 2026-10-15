@@ -1,0 +1,6 @@
+Pi GPIO graphic adapted from Pinout.xyz by Gadgetoid.
+https://github.com/pinout-xyz/Pinout.xyz/blob/main/README.md
+https://pinout.xyz/pinout/uart
+Diagram adaptation: CC BY-SA 4.0, https://creativecommons.org/licenses/by-sa/4.0/
+UART wiring annotations by Amrish Hallberg.
+Other photographs and reaction images are not covered by this diagram licence.

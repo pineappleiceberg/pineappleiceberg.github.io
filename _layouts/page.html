@@ -9,9 +9,8 @@ layout: base
   target=layout.header source0=page.header -%}
 {%- assign _header = __return -%}
 
-{%- include snippets/assign.html
-  target=layout.footer source0=page.footer -%}
-{%- assign _footer = __return -%}
+{%- comment -%}The site-wide theme footer is disabled on every page.{%- endcomment -%}
+{%- assign _footer = false -%}
 
 {%- include snippets/assign.html
   target=layout.lightbox source0=page.lightbox -%}

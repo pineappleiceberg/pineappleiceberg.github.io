@@ -1,5 +1,13 @@
 header:
   - titles:
+      en      : Projects
+      en-GB   : Projects
+      en-US   : Projects
+      en-CA   : Projects
+      en-AU   : Projects
+    url: /projects/
+
+  - titles:
       # @start locale config
       en      : &EN       Archive
       en-GB   : *EN

@@ -1,3 +1,10 @@
 <!-- start custom head snippets -->
-
+{%- assign social_description = page.description | default: page.excerpt | default: site.description -%}
+{%- capture social_title -%}{%- if page.url == '/' -%}Cryptography, Security & Low-Level Systems · {{ site.title }}{%- else -%}{{ page.title | default: site.title }}{%- endif -%}{%- endcapture -%}
+<meta property="og:site_name" content="{{ site.title | escape }}">
+<meta property="og:title" content="{{ social_title | strip | escape }}">
+<meta property="og:description" content="{{ social_description | strip_html | strip_newlines | strip | escape }}">
+<meta property="og:url" content="{{ page.url | absolute_url }}">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
 <!-- end custom head snippets -->

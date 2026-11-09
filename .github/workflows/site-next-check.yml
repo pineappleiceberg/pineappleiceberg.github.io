@@ -1,0 +1,33 @@
+name: Next-site prototype checks
+
+on:
+  pull_request:
+    paths:
+      - "site-next/**"
+      - ".github/workflows/site-next-check.yml"
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Build and test Rust generator
+        working-directory: site-next
+        run: |
+          cargo test
+          cargo run --release
+          test -f dist/index.html
+          test -f dist/projects/index.html
+          test -f dist/experiments/bitset-overlap/index.html
+          ! grep -q '<script' dist/index.html
+          grep -q 'rel="canonical"' dist/index.html
+          grep -q 'application/wasm' dist/experiments/bitset-overlap/index.html && exit 1 || true
+      - name: Build 76-byte C/WASM experiment
+        working-directory: site-next
+        run: |
+          make wasm
+          test -s assets/experiments/bitset-overlap.wasm
+          cargo run --release
+          test -s dist/assets/experiments/bitset-overlap.wasm

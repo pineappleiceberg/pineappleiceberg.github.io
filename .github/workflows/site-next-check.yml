@@ -13,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
-      - name: Build and test Rust generator
+      - name: Build and test the Rust generator
         working-directory: site-next
         run: |
           cargo test
@@ -22,12 +22,41 @@ jobs:
           test -f dist/projects/index.html
           test -f dist/experiments/bitset-overlap/index.html
           ! grep -q '<script' dist/index.html
+          ! grep -q '<script' dist/projects/index.html
           grep -q 'rel="canonical"' dist/index.html
-          grep -q 'application/wasm' dist/experiments/bitset-overlap/index.html && exit 1 || true
-      - name: Build 76-byte C/WASM experiment
+      - name: Regenerate and test the C/WASM experiment
         working-directory: site-next
         run: |
           make wasm
-          test -s assets/experiments/bitset-overlap.wasm
           cargo run --release
-          test -s dist/assets/experiments/bitset-overlap.wasm
+          node --input-type=module - <<'NODE'
+          import fs from 'node:fs';
+          import assert from 'node:assert/strict';
+          const bytes = fs.readFileSync('dist/assets/experiments/bitset-overlap.wasm');
+          const { instance } = await WebAssembly.instantiate(bytes, {});
+          assert.equal(instance.exports.overlap_count(7, 3), 2);
+          assert.equal(instance.exports.overlap_count(255, 240), 4);
+          assert.equal(instance.exports.overlap_count(0, 65535), 0);
+          console.log('WASM computation passed:', bytes.byteLength, 'bytes');
+          NODE
+      - name: Report output size and enforce initial budgets
+        working-directory: site-next
+        run: |
+          test "$(wc -c < dist/index.html)" -lt 15000
+          test "$(wc -c < dist/assets/site.css)" -lt 10000
+          test "$(wc -c < dist/assets/experiments/bitset-overlap.wasm)" -lt 2048
+          node --input-type=module - <<'NODE'
+          import fs from 'node:fs';
+          import zlib from 'node:zlib';
+          for (const path of [
+            'dist/index.html',
+            'dist/projects/index.html',
+            'dist/experiments/bitset-overlap/index.html',
+            'dist/assets/site.css',
+            'dist/assets/experiments/bitset-overlap.js',
+            'dist/assets/experiments/bitset-overlap.wasm'
+          ]) {
+            const b = fs.readFileSync(path);
+            console.log(path, 'raw:', b.length, 'gzip:', zlib.gzipSync(b).length, 'bytes');
+          }
+          NODE

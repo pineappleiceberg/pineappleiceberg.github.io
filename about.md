@@ -24,6 +24,7 @@ titles:
   fr-LU   : *FR
   # @end locale config
 key: page-about
+description: About Amrish Hallberg and his work on cryptography, privacy-preserving computation, and secure systems.
 ---
 
 I'm Amrish Hallberg. I'm interested in the intersection of cryptography, privacy-preserving computation, and secure systems engineering. I especially like the gap between a protocol on paper and an implementation that must actually work.
